@@ -86,6 +86,15 @@ public class DefaultHandlerExceptionResolverTests {
 		assertThat(response.getStatus()).as("Invalid status code").isEqualTo(415);
 		assertThat(response.getHeader("Accept")).as("Invalid Accept header").isEqualTo("application/pdf");
 	}
+	@Test
+	public void handleNullSupported() {
+		NullPointerException ex = new NullPointerException("空指针异常");
+		ModelAndView mav = exceptionResolver.resolveException(request, response, null, ex);
+		assertThat(mav).as("No ModelAndView returned").isNotNull();
+		assertThat(mav.isEmpty()).as("No Empty ModelAndView returned").isTrue();
+		assertThat(response.getStatus()).as("Invalid status code").isEqualTo(415);
+		assertThat(response.getHeader("Accept")).as("Invalid Accept header").isEqualTo("application/pdf");
+	}
 
 	@Test
 	public void patchHttpMediaTypeNotSupported() {

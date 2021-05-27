@@ -70,17 +70,25 @@ public class BeanFactoryAdvisorRetrievalHelper {
 		if (advisorNames == null) {
 			// Do not initialize FactoryBeans here: We need to leave all regular beans
 			// uninitialized to let the auto-proxy creator apply to them!
+
+			//根据 beanNamesForTypeIncludingAncestors 获取所有Advisor类型的Bean的名称
+			//通过BeanFactoryUtils.beanNamesForTypeIncludingAncestors(this.beanFactory, Object.class, true, false)获取到容器中的所有的Bean的名称，
+			// 放入列表，遍历列表，根据每个Bean的名称，获取对应的Bean的类型，根据beanType判断是否是切面this.advisorFactory.isAspect(beanType)，这里的isAspect 就是上面说过的。
+			//最后buildAspectJAdvisors方法创建了MetadataAwareAspectInstanceFactory，通过该对象获取对应的advisor，并将其加入到List<Advisor> 中。
 			advisorNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 					this.beanFactory, Advisor.class, true, false);
 			this.cachedAdvisorBeanNames = advisorNames;
 		}
+		//获取beanName 为空的话，直接返回空
 		if (advisorNames.length == 0) {
 			return new ArrayList<>();
 		}
 
 		List<Advisor> advisors = new ArrayList<>();
 		for (String name : advisorNames) {
+			//默认返回true
 			if (isEligibleBean(name)) {
+				//判断当前bean是否在创建中
 				if (this.beanFactory.isCurrentlyInCreation(name)) {
 					if (logger.isTraceEnabled()) {
 						logger.trace("Skipping currently created advisor '" + name + "'");
@@ -88,6 +96,7 @@ public class BeanFactoryAdvisorRetrievalHelper {
 				}
 				else {
 					try {
+						//根据 beanName 获取 bean，添加到advisor中。
 						advisors.add(this.beanFactory.getBean(name, Advisor.class));
 					}
 					catch (BeanCreationException ex) {

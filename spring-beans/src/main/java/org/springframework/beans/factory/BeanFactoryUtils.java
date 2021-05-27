@@ -246,6 +246,11 @@ public abstract class BeanFactoryUtils {
 	 * will be matched against the type. If "allowEagerInit" is not set,
 	 * only raw FactoryBeans will be checked (which doesn't require initialization
 	 * of each FactoryBean).
+	 *
+	 * 通过BeanFactoryUtils.beanNamesForTypeIncludingAncestors(this.beanFactory, Object.class, true, false)获取到容器中的所有的Bean的名称，
+	 * 放入列表，遍历列表，根据每个Bean的名称，获取对应的Bean的类型，根据beanType判断是否是切面this.advisorFactory.isAspect(beanType)，这里的isAspect 就是上面说过的。
+	 * 最后buildAspectJAdvisors方法创建了MetadataAwareAspectInstanceFactory，通过该对象获取对应的advisor，并将其加入到List<Advisor> 中。
+	 *
 	 * @param lbf the bean factory
 	 * @param includeNonSingletons whether to include prototype or scoped beans too
 	 * or just singletons (also applies to FactoryBeans)

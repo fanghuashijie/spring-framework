@@ -1005,6 +1005,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Return whether this factory holds a InstantiationAwareBeanPostProcessor
 	 * that will get applied to singleton beans on creation.
+	 * 返回此工厂是否持有InstantiationAwareBeanPostProcessor，它将在创建时应用于单例bean。
+	 * 检查被创建的对象是否有PostProcessor处理器
 	 * @see #addBeanPostProcessor
 	 * @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor
 	 */

@@ -48,16 +48,25 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 	/** The default name of the exception attribute: "exception". */
 	public static final String DEFAULT_EXCEPTION_ATTRIBUTE = "exception";
 
-
+	/**
+	 * 被处理的异常集合
+	 */
 	@Nullable
 	private Properties exceptionMappings;
 
+	/**
+	 * 被过滤的异常集合
+	 * */
 	@Nullable
 	private Class<?>[] excludedExceptions;
-
+	/**
+	 * 默认的错误显示页面
+	 */
 	@Nullable
 	private String defaultErrorView;
-
+	/**
+	 * 默认的错误状态码
+	 */
 	@Nullable
 	private Integer defaultStatusCode;
 
@@ -179,6 +188,9 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 	 * @param ex the exception that got thrown during handler execution
 	 * @return a corresponding {@code ModelAndView} to forward to,
 	 * or {@code null} for default processing in the resolution chain
+	 *
+	 *
+	 * 它继承了 AbstractHandlerMethodExceptionResolver 。实现了真正的异常处理。
 	 */
 	@Override
 	@Nullable
@@ -186,14 +198,18 @@ public class SimpleMappingExceptionResolver extends AbstractHandlerExceptionReso
 			HttpServletRequest request, HttpServletResponse response, @Nullable Object handler, Exception ex) {
 
 		// Expose ModelAndView for chosen error view.
+		// 1、决定的视图
 		String viewName = determineViewName(ex, request);
 		if (viewName != null) {
 			// Apply HTTP status code for error views, if specified.
 			// Only apply it if we're processing a top-level request.
+			// 2、决定错误状态码
 			Integer statusCode = determineStatusCode(request, viewName);
 			if (statusCode != null) {
+				// 3、设置错误状态码
 				applyStatusCodeIfPossible(request, response, statusCode);
 			}
+			// 4、返回错误页面
 			return getModelAndView(viewName, ex, request);
 		}
 		else {

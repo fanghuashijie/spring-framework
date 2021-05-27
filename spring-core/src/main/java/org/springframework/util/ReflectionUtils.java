@@ -348,6 +348,9 @@ public abstract class ReflectionUtils {
 	 * class and superclasses (or given interface and super-interfaces).
 	 * <p>The same named method occurring on subclass and superclass will appear
 	 * twice, unless excluded by the specified {@link MethodFilter}.
+	 *
+	 * 对给定类和超类（或给定接口和超接口）的所有匹配方法执行给定的回调操作。
+	 * 除非指定的{@link MethodFilter}排除在子类和超类上，否则相同名称的方法将出现两次。
 	 * @param clazz the class to introspect
 	 * @param mc the callback to invoke for each method
 	 * @param mf the filter that determines the methods to apply the callback to
@@ -355,7 +358,9 @@ public abstract class ReflectionUtils {
 	 */
 	public static void doWithMethods(Class<?> clazz, MethodCallback mc, @Nullable MethodFilter mf) {
 		// Keep backing up the inheritance hierarchy.
+		//根据 class 获取所有public公开的方法
 		Method[] methods = getDeclaredMethods(clazz, false);
+		//遍历类所有的方法
 		for (Method method : methods) {
 			if (mf != null && !mf.matches(method)) {
 				continue;

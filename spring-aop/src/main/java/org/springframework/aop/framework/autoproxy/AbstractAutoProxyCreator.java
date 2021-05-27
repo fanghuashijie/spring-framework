@@ -243,12 +243,17 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
+		//获取缓存中的key，也就是BeanClass
 		Object cacheKey = getCacheKey(beanClass, beanName);
 
+		//判断对象如果不为空，   判断 目标集合targetSourcedBeans 是否包含当前bean，不包含的话
 		if (!StringUtils.hasLength(beanName) || !this.targetSourcedBeans.contains(beanName)) {
+			//判断当前bean 是否存在 advisedBeans 中
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
+			//重点： isInfrastructureClass 判断当前bean是否是基础类型 Advice、Pointcut、Advisor、AopInfrastructureBean，或者是否是切面（@Aspect） 基础类型不能被代理
+			//重点： shouldSkip 判断是否需要跳过
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
@@ -258,11 +263,17 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		// Create proxy here if we have a custom TargetSource.
 		// Suppresses unnecessary default instantiation of the target bean:
 		// The TargetSource will handle target instances in a custom fashion.
+		//如果我们有自定义的TargetSource，请在此处创建代理。
+		// 抑制目标Bean的不必要的默认实例化：TargetSource将以自定义方式处理目标实例。
+
+		//获取封装当前bean的TargetSource对象
 		TargetSource targetSource = getCustomTargetSource(beanClass, beanName);
+		//如果不存在 == null ，则直接退出当前方法
 		if (targetSource != null) {
 			if (StringUtils.hasLength(beanName)) {
 				this.targetSourcedBeans.add(beanName);
 			}
+			//重点：否则从targetSource中获取当前bean对象，并且判断是否需要将切面逻辑应用在当前bean上
 			Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(beanClass, beanName, targetSource);
 			Object proxy = createProxy(beanClass, beanName, specificInterceptors, targetSource);
 			this.proxyTypes.put(cacheKey, proxy.getClass());
@@ -359,8 +370,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @see org.springframework.aop.Advisor
 	 * @see org.springframework.aop.framework.AopInfrastructureBean
 	 * @see #shouldSkip
+	 *
+	 * 类AbstractAutoProxyCreator 最终的子类是 AnnotationAwareAspectJAutoProxyCreator
+	 * 通过打断点可知，先走的是子类的AnnotationAwareAspectJAutoProxyCreator#isInfrastructureClass
 	 */
 	protected boolean isInfrastructureClass(Class<?> beanClass) {
+		//如果beanClass是Advice、Advisor、AopInfrastructureBean 是他们中的一种
+		//那么久是基础设施类，不能被代理
 		boolean retVal = Advice.class.isAssignableFrom(beanClass) ||
 				Pointcut.class.isAssignableFrom(beanClass) ||
 				Advisor.class.isAssignableFrom(beanClass) ||

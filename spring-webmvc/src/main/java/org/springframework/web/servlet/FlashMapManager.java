@@ -38,6 +38,7 @@ public interface FlashMapManager {
 	 * <p>This method is invoked in the beginning of every request in contrast
 	 * to {@link #saveOutputFlashMap}, which is invoked only when there are
 	 * flash attributes to be saved - i.e. before a redirect.
+	 * 恢复参数，并将恢复过的和超时的参数从保存介质中删除
 	 * @param request the current request
 	 * @param response the current response
 	 * @return a FlashMap matching the current request or {@code null}
@@ -54,6 +55,7 @@ public interface FlashMapManager {
 	 * @param flashMap the FlashMap to save
 	 * @param request the current request
 	 * @param response the current response
+	 *                 将参数保存起来
 	 */
 	void saveOutputFlashMap(FlashMap flashMap, HttpServletRequest request, HttpServletResponse response);
 

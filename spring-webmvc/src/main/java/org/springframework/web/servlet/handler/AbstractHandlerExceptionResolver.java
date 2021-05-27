@@ -136,8 +136,11 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	public ModelAndView resolveException(
 			HttpServletRequest request, HttpServletResponse response, @Nullable Object handler, Exception ex) {
 
+		// 1、判断是否支持该处理器
 		if (shouldApplyTo(request, handler)) {
+			// 2、预处理响应消息，让请求头取消缓存
 			prepareResponse(ex, response);
+			// 3、异常处理，空方法    调用一个抽象方法，抽象方法由子类实现
 			ModelAndView result = doResolveException(request, response, handler, ex);
 			if (result != null) {
 				// Print debug message when warn logger is not enabled.
@@ -166,6 +169,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	 * for the given request and handler
 	 * @see #setMappedHandlers
 	 * @see #setMappedHandlerClasses
+	 * 判断上下文中的处理器是否包含 异常处理器
 	 */
 	protected boolean shouldApplyTo(HttpServletRequest request, @Nullable Object handler) {
 		if (handler != null) {
