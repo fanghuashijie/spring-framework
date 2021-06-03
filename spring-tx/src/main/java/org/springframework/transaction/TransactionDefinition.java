@@ -48,6 +48,10 @@ public interface TransactionDefinition {
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p>This is typically the default setting of a transaction definition,
 	 * and typically defines a transaction synchronization scope.
+	 *
+	 * 支持当前交易；如果不存在，请创建一个新的。类似于同名的EJB事务属性。 <p>这通常是事务定义的默认设置，并且通常定义事务同步作用域。
+	 *
+	 * 支持当前事物，如果当前没有事物，就新建一个事务，这是最常见的选择，也是spring默认的事物传播
 	 */
 	int PROPAGATION_REQUIRED = 0;
 
@@ -69,6 +73,8 @@ public interface TransactionDefinition {
 	 * "synchronization on actual transaction").
 	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#setTransactionSynchronization
 	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#SYNCHRONIZATION_ON_ACTUAL_TRANSACTION
+	 *
+	 * 支持当前事务，如果当前没有事物，就以非事物方式执行
 	 */
 	int PROPAGATION_SUPPORTS = 1;
 
@@ -77,6 +83,9 @@ public interface TransactionDefinition {
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization within a {@code PROPAGATION_MANDATORY}
 	 * scope will always be driven by the surrounding transaction.
+	 *
+	 * 支持当前事务，如果当前没有事务，就抛出异常
+	 *
 	 */
 	int PROPAGATION_MANDATORY = 2;
 
@@ -92,6 +101,9 @@ public interface TransactionDefinition {
 	 * transaction synchronizations. Existing synchronizations will be suspended
 	 * and resumed appropriately.
 	 * @see org.springframework.transaction.jta.JtaTransactionManager#setTransactionManager
+	 *
+	 * 新建事务，如果当前存在事务，把当前事务挂起，新建的事务和被挂起的事务没有任何关系，是两个独立的事务，
+	 * 外层事务失败回滚之后，不能回滚内层事务执行的结果，内层事务失败抛出异常，外层事务捕获，也可以不处理回滚操作。
 	 */
 	int PROPAGATION_REQUIRES_NEW = 3;
 
@@ -107,6 +119,8 @@ public interface TransactionDefinition {
 	 * {@code PROPAGATION_NOT_SUPPORTED} scope. Existing synchronizations
 	 * will be suspended and resumed appropriately.
 	 * @see org.springframework.transaction.jta.JtaTransactionManager#setTransactionManager
+	 *
+	 * 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起
 	 */
 	int PROPAGATION_NOT_SUPPORTED = 4;
 
@@ -115,6 +129,8 @@ public interface TransactionDefinition {
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization is <i>not</i> available within a
 	 * {@code PROPAGATION_NEVER} scope.
+	 *
+	 * 以非事务方式执行，如果当前存在事务，则抛出异常
 	 */
 	int PROPAGATION_NEVER = 5;
 
@@ -128,6 +144,9 @@ public interface TransactionDefinition {
 	 * when working on a JDBC 3.0 driver. Some JTA providers might support
 	 * nested transactions as well.
 	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager
+	 *
+	 * 如果一个活动的事务存在，则运行在一个嵌套的事务中，如果没有活动事务，则按 PROPAGATION_REQUIRED 属性执行，它使用了
+	 * 一个单独的事务，这个事务拥有多个可以回滚的保存点，内部事务的回滚不会对外部事务造成影响，它只对 DataSourceTransactionManager 事务管理器 起效。
 	 */
 	int PROPAGATION_NESTED = 6;
 
@@ -147,6 +166,9 @@ public interface TransactionDefinition {
 	 * If any of the changes are rolled back, the second transaction will have
 	 * retrieved an invalid row.
 	 * @see java.sql.Connection#TRANSACTION_READ_UNCOMMITTED
+	 *
+	 * 表示可能发生脏读，不可重复读和幻像读
+	 * 导致脏读
 	 */
 	int ISOLATION_READ_UNCOMMITTED = 1;  // same as java.sql.Connection.TRANSACTION_READ_UNCOMMITTED;
 
@@ -156,6 +178,8 @@ public interface TransactionDefinition {
 	 * <p>This level only prohibits a transaction from reading a row
 	 * with uncommitted changes in it.
 	 * @see java.sql.Connection#TRANSACTION_READ_COMMITTED
+	 * 指示防止脏读；可能会发生不可重复的读取和幻像读取
+	 * 避免脏读，允许不可重复读和幻读
 	 */
 	int ISOLATION_READ_COMMITTED = 2;  // same as java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
@@ -167,6 +191,9 @@ public interface TransactionDefinition {
 	 * a second transaction alters the row, and the first transaction re-reads the row,
 	 * getting different values the second time (a "non-repeatable read").
 	 * @see java.sql.Connection#TRANSACTION_REPEATABLE_READ
+	 *
+	 * 指示防止脏读和不可重复读；幻像读取可能发生。
+	 * 避免脏读，不可重复读，允许幻读
 	 */
 	int ISOLATION_REPEATABLE_READ = 4;  // same as java.sql.Connection.TRANSACTION_REPEATABLE_READ;
 
@@ -180,6 +207,8 @@ public interface TransactionDefinition {
 	 * re-reads for the same condition, retrieving the additional "phantom" row
 	 * in the second read.
 	 * @see java.sql.Connection#TRANSACTION_SERIALIZABLE
+	 * 指示防止脏读，不可重复读和幻像读
+	 * 串行化读，事务只能一个一个执行，避免了脏读，不可重复读，幻读、执行效率慢，使用慎重
 	 */
 	int ISOLATION_SERIALIZABLE = 8;  // same as java.sql.Connection.TRANSACTION_SERIALIZABLE;
 

@@ -1081,6 +1081,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// Determine handler for the current request.
 				// 步骤1，获取执行链
 				// 通过 mappedHandler 映射获取 HandlerExecutionChain （处理连中包含了 interceptor 的前置和后置方法 ）
+				// 1、 从容器中找可以处理请求的 对象和方法，（Controller.method）
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
@@ -1090,10 +1091,12 @@ public class DispatcherServlet extends FrameworkServlet {
 				// Determine handler adapter for the current request.
 				// 步骤2，获取适配器
 				// 根据处理器 （handler 及 HandlerExecutionChain ）获取处理适配器（处理适配器是为了提供统一接口进行后续处理，从而支持多种类型的处理器）
+				// 2、寻找可以处理该处理器的方法 ，找处理器的适配器 默认找到  RequestMappingHandlerAdapter
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
 				String method = request.getMethod();
+				// 判断当前是不是get方法
 				boolean isGet = HttpMethod.GET.matches(method);
 				if (isGet || HttpMethod.HEAD.matches(method)) {
 					long lastModified = ha.getLastModified(request, mappedHandler.getHandler());
@@ -1111,6 +1114,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// Actually invoke the handler.
 				// 步骤4真正的处理逻辑
 				// 执行 chain 中拦截器附加的后处理方法，即postHandler方法
+				// 3、执行目标方法，使用找到的 处理器 和 适配器，处理器是方法，是适配器是处理参数
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -1308,8 +1312,11 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Nullable
 	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		// 获取所有注册的RequestMapper 的方法
 		if (this.handlerMappings != null) {
+			// 遍历获取的所有 RequestMapping 的方法
 			for (HandlerMapping mapping : this.handlerMappings) {
+				// 找到要处理请求的 handler
 				HandlerExecutionChain handler = mapping.getHandler(request);
 				if (handler != null) {
 					return handler;

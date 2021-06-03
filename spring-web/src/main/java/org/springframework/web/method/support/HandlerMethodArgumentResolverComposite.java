@@ -96,6 +96,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	/**
 	 * Whether the given {@linkplain MethodParameter method parameter} is
 	 * supported by any registered {@link HandlerMethodArgumentResolver}.
+	 * 判断参数解析器是否支持 解析参数
 	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -118,18 +119,22 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 			throw new IllegalArgumentException("Unsupported parameter type [" +
 					parameter.getParameterType().getName() + "]. supportsParameter should be called first.");
 		}
+		// 开始解析参数 默认使用 AbstractNamedValueMethodArgumentResolver#resolveArgument
 		return resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
 	}
 
 	/**
 	 * Find a registered {@link HandlerMethodArgumentResolver} that supports
 	 * the given method parameter.
+	 *
+	 * 判断参数解析器是否支持参数
 	 */
 	@Nullable
 	private HandlerMethodArgumentResolver getArgumentResolver(MethodParameter parameter) {
 		HandlerMethodArgumentResolver result = this.argumentResolverCache.get(parameter);
 		if (result == null) {
 			for (HandlerMethodArgumentResolver resolver : this.argumentResolvers) {
+				// 遍历31 中参数解析器，谁可以支持解析参数， 判断方法是 类是否含有次参数的注解
 				if (resolver.supportsParameter(parameter)) {
 					result = resolver;
 					this.argumentResolverCache.put(parameter, result);

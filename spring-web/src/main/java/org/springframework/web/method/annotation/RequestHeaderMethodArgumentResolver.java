@@ -57,8 +57,10 @@ public class RequestHeaderMethodArgumentResolver extends AbstractNamedValueMetho
 	}
 
 
+	// 判断 参数解析器 是否支持传入参数的解析，
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
+		// 判断参数上是否含有 这个解析器的注解
 		return (parameter.hasParameterAnnotation(RequestHeader.class) &&
 				!Map.class.isAssignableFrom(parameter.nestedIfOptional().getNestedParameterType()));
 	}

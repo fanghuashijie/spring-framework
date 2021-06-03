@@ -274,11 +274,14 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 			Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(con, definition);
 			txObject.setPreviousIsolationLevel(previousIsolationLevel);
+			//设置是否制度
 			txObject.setReadOnly(definition.isReadOnly());
 
 			// Switch to manual commit if necessary. This is very expensive in some JDBC drivers,
 			// so we don't want to do it unnecessarily (for example if we've explicitly
 			// configured the connection pool to set it already).
+			// 如有必要，请切换为手动提交。在某些JDBC驱动程序中，这是非常昂贵的，因此我们不想不必要地这样做（例如，如果我们已经明确配置了连接池以进行设置）。
+			// 如果要把mysql事务交给spring托管必须设置 AutoCommit 为false，否则jdbc会自动提交
 			if (con.getAutoCommit()) {
 				txObject.setMustRestoreAutoCommit(true);
 				if (logger.isDebugEnabled()) {
