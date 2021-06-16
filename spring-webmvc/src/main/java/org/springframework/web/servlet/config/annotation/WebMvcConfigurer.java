@@ -49,6 +49,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 public interface WebMvcConfigurer {
 
 	/**
+	 *功能描述  修改spring默认的配置， 使spring 开启对url中的矩阵请求进行解析
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Help with configuring {@link HandlerMapping} path matching options such as
 	 * whether to use parsed {@code PathPatterns} or String pattern matching
 	 * with {@code PathMatcher}, whether to match trailing slashes, and more.
@@ -80,6 +83,9 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 *功能描述  添加自定义的Converter 参数转换器
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Add {@link Converter Converters} and {@link Formatter Formatters} in addition to the ones
 	 * registered by default.
 	 */
@@ -87,6 +93,9 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 *功能描述  添加自定义的拦截器
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Add Spring MVC lifecycle interceptors for pre- and post-processing of
 	 * controller method invocations and resource handler requests.
 	 * Interceptors can be registered to apply to all requests or be limited
@@ -96,6 +105,9 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 *功能描述   添加一个静态的资源处理器
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Add handlers to serve static resources such as images, js, and, css
 	 * files from specific locations under web application root, the classpath,
 	 * and others.
@@ -141,16 +153,24 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 *功能描述  添加自定义的参数处理器
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Add resolvers to support custom controller method argument types.
 	 * <p>This does not override the built-in support for resolving handler
 	 * method arguments. To customize the built-in support for argument
 	 * resolution, configure {@link RequestMappingHandlerAdapter} directly.
 	 * @param resolvers initially an empty list
+	 *
+	 *
 	 */
 	default void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
 	}
 
 	/**
+	 *功能描述  添加返回值的处理器
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Add handlers to support custom controller method return value types.
 	 * <p>Using this option does not override the built-in support for handling
 	 * return values. To customize the built-in support for handling return
@@ -161,6 +181,9 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 *功能描述  修改默认的消息转换器
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Configure the {@link HttpMessageConverter HttpMessageConverter}s for
 	 * reading from the request body and for writing to the response body.
 	 * <p>By default, all built-in converters are configured as long as the
@@ -176,6 +199,9 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 *功能描述  拓展消息转换器
+	 * @author bluce.liu
+	 * @date 2021/6/7
 	 * Extend or modify the list of converters after it has been, either
 	 * {@link #configureMessageConverters(List) configured} or initialized with
 	 * a default list.

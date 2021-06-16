@@ -91,11 +91,19 @@ public class ResourceRegionHttpMessageConverter extends AbstractGenericHttpMessa
 		throw new UnsupportedOperationException();
 	}
 
+
 	@Override
 	public boolean canWrite(Class<?> clazz, @Nullable MediaType mediaType) {
 		return canWrite(clazz, null, mediaType);
 	}
 
+	/**
+	 *功能描述 判断是否支持返回参数的解析，
+	 * 本对象  ParameterizedType
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return boolean
+	 */
 	@Override
 	public boolean canWrite(@Nullable Type type, @Nullable Class<?> clazz, @Nullable MediaType mediaType) {
 		if (!(type instanceof ParameterizedType)) {

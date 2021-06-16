@@ -85,6 +85,13 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 	}
 
 
+	/**
+	 *功能描述 判断是否支持返回参数的解析，
+	 * 本对象 值解析String 类型的返回参数
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return boolean
+	 */
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return String.class == clazz;

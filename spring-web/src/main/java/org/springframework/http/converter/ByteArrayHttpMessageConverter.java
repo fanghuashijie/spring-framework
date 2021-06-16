@@ -46,6 +46,12 @@ public class ByteArrayHttpMessageConverter extends AbstractHttpMessageConverter<
 	}
 
 
+	/**
+	 *功能描述 判断是否支持写出参数的类型， 判断是否支持 返回对象的解析
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return boolean
+	 */
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return byte[].class == clazz;

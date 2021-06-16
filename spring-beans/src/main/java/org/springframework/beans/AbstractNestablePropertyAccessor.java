@@ -232,10 +232,12 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		return getRootInstance().getClass();
 	}
 
+
 	@Override
 	public void setPropertyValue(String propertyName, @Nullable Object value) throws BeansException {
 		AbstractNestablePropertyAccessor nestedPa;
 		try {
+			// 进行对象 赋值操作
 			nestedPa = getPropertyAccessorForPropertyPath(propertyName);
 		}
 		catch (NotReadablePropertyException ex) {
@@ -246,6 +248,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		nestedPa.setPropertyValue(tokens, new PropertyValue(propertyName, value));
 	}
 
+	// 对属性进行赋值
 	@Override
 	public void setPropertyValue(PropertyValue pv) throws BeansException {
 		PropertyTokenHolder tokens = (PropertyTokenHolder) pv.resolvedTokens;
@@ -253,6 +256,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			String propertyName = pv.getName();
 			AbstractNestablePropertyAccessor nestedPa;
 			try {
+				// 进行对象 赋值操作
 				nestedPa = getPropertyAccessorForPropertyPath(propertyName);
 			}
 			catch (NotReadablePropertyException ex) {
@@ -263,13 +267,14 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			if (nestedPa == this) {
 				pv.getOriginalPropertyValue().resolvedTokens = tokens;
 			}
+			// 根据包装类进行对真正的对象赋值
 			nestedPa.setPropertyValue(tokens, pv);
 		}
 		else {
 			setPropertyValue(tokens, pv);
 		}
 	}
-
+	// 对 对象 进行赋值操作
 	protected void setPropertyValue(PropertyTokenHolder tokens, PropertyValue pv) throws BeansException {
 		if (tokens.keys != null) {
 			processKeyedProperty(tokens, pv);
@@ -455,6 +460,8 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 							}
 						}
 					}
+					// 进行参数转换， 例如：把string转为int ，string 转日期 等，
+					// 把请求中的参数类型转换为 对象的属性类型
 					valueToApply = convertForProperty(
 							tokens.canonicalName, oldValue, originalValue, ph.toTypeDescriptor());
 				}
@@ -580,6 +587,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		return false;
 	}
 
+	// 进行参数转换， 把参数类型转换为目标的类型
 	@Nullable
 	private Object convertIfNecessary(@Nullable String propertyName, @Nullable Object oldValue,
 			@Nullable Object newValue, @Nullable Class<?> requiredType, @Nullable TypeDescriptor td)
@@ -587,6 +595,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 
 		Assert.state(this.typeConverterDelegate != null, "No TypeConverterDelegate");
 		try {
+			// 携带 158中转换器，去转换数据 ，新增了30
 			return this.typeConverterDelegate.convertIfNecessary(propertyName, oldValue, newValue, requiredType, td);
 		}
 		catch (ConverterNotFoundException | IllegalStateException ex) {

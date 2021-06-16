@@ -137,12 +137,14 @@ public class GenericConversionService implements ConfigurableConversionService {
 				TypeDescriptor.valueOf(targetType));
 	}
 
+	// 判断转换器是否能转换参数
 	@Override
 	public boolean canConvert(@Nullable TypeDescriptor sourceType, TypeDescriptor targetType) {
 		Assert.notNull(targetType, "Target type to convert to cannot be null");
 		if (sourceType == null) {
 			return true;
 		}
+		// 根据目标类型获取转换器
 		GenericConverter converter = getConverter(sourceType, targetType);
 		return (converter != null);
 	}
@@ -175,6 +177,12 @@ public class GenericConversionService implements ConfigurableConversionService {
 		return (T) convert(source, TypeDescriptor.forObject(source), TypeDescriptor.valueOf(targetType));
 	}
 
+	/**
+	 *功能描述 进行参数转换， 把远参数转换为目标参数
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return
+	 */
 	@Override
 	@Nullable
 	public Object convert(@Nullable Object source, @Nullable TypeDescriptor sourceType, TypeDescriptor targetType) {
@@ -187,8 +195,10 @@ public class GenericConversionService implements ConfigurableConversionService {
 			throw new IllegalArgumentException("Source to convert from must be an instance of [" +
 					sourceType + "]; instead it was a [" + source.getClass().getName() + "]");
 		}
+		// 获取转换器
 		GenericConverter converter = getConverter(sourceType, targetType);
 		if (converter != null) {
+			// 利用转换器进行转换
 			Object result = ConversionUtils.invokeConverter(converter, source, sourceType, targetType);
 			return handleResult(sourceType, targetType, result);
 		}
@@ -252,12 +262,14 @@ public class GenericConversionService implements ConfigurableConversionService {
 	 */
 	@Nullable
 	protected GenericConverter getConverter(TypeDescriptor sourceType, TypeDescriptor targetType) {
+		// 先从缓存中获取转换器， 如果转换过一次就会存入缓存中
 		ConverterCacheKey key = new ConverterCacheKey(sourceType, targetType);
 		GenericConverter converter = this.converterCache.get(key);
 		if (converter != null) {
 			return (converter != NO_MATCH ? converter : null);
 		}
 
+		// 从所有的转换器中 查找可以转换目标类型的转换器
 		converter = this.converters.find(sourceType, targetType);
 		if (converter == null) {
 			converter = getDefaultConverter(sourceType, targetType);
@@ -533,6 +545,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 		 * @param sourceType the source type
 		 * @param targetType the target type
 		 * @return a matching {@link GenericConverter}, or {@code null} if none found
+		 * 转换器模式
 		 */
 		@Nullable
 		public GenericConverter find(TypeDescriptor sourceType, TypeDescriptor targetType) {
@@ -542,6 +555,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 			for (Class<?> sourceCandidate : sourceCandidates) {
 				for (Class<?> targetCandidate : targetCandidates) {
 					ConvertiblePair convertiblePair = new ConvertiblePair(sourceCandidate, targetCandidate);
+					// 查找可以把参数类型，转换为目标类型的转换器
 					GenericConverter converter = getRegisteredConverter(sourceType, targetType, convertiblePair);
 					if (converter != null) {
 						return converter;

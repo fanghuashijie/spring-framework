@@ -165,6 +165,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	 */
 	@Override
 	public boolean canWrite(Class<?> clazz, @Nullable MediaType mediaType) {
+		// 判断是否支持 返回值类型
 		return supports(clazz) && canWrite(mediaType);
 	}
 
@@ -175,6 +176,8 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	 * Typically the value of an {@code Accept} header.
 	 * @return {@code true} if the supported media types are compatible with the media type,
 	 * or if the media type is {@code null}
+	 *
+	 * 判断是否可以写出操作
 	 */
 	protected boolean canWrite(@Nullable MediaType mediaType) {
 		if (mediaType == null || MediaType.ALL.equalsTypeAndSubtype(mediaType)) {

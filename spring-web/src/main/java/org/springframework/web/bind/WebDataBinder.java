@@ -335,6 +335,8 @@ public class WebDataBinder extends DataBinder {
 	 * @param mpvs the property values to be bound (can be modified)
 	 * @see org.springframework.web.multipart.MultipartFile
 	 * @see #setBindEmptyMultipartFiles
+	 *
+	 * 对参数进行绑定， multipartFiles为所有参数的属性，mpvs所有参数的k/v对象
 	 */
 	protected void bindMultipart(Map<String, List<MultipartFile>> multipartFiles, MutablePropertyValues mpvs) {
 		multipartFiles.forEach((key, values) -> {

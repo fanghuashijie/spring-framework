@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
 /**
  * Converts an array to an Object by returning the first array element
  * after converting it to the desired target type.
+ * 数组 转为对象类型
  *
  * @author Keith Donald
  * @since 3.0
@@ -55,6 +56,7 @@ final class ArrayToObjectConverter implements ConditionalGenericConverter {
 	@Override
 	@Nullable
 	public Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+		// 把数组 转为对象
 		if (source == null) {
 			return null;
 		}

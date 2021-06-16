@@ -208,6 +208,7 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	/**
 	 * The HTTP {@code Content-Type} header field name.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Section 3.1.1.5 of RFC 7231</a>
+	 *  在 请求返回的时候 设置请求头的属性
 	 */
 	public static final String CONTENT_TYPE = "Content-Type";
 	/**

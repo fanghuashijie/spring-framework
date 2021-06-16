@@ -39,6 +39,8 @@ import org.springframework.util.Assert;
  *
  * <p>Compatible with Jackson 2.9 to 2.12, as of Spring 5.3.
  *
+ *  支持 json 转 xml
+ *
  * @author Sebastien Deleuze
  * @since 4.1
  */

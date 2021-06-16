@@ -135,7 +135,13 @@ public class SourceHttpMessageConverter<T extends Source> extends AbstractHttpMe
 		return this.processExternalEntities;
 	}
 
-
+	/**
+	 *功能描述 判断是否支持返回值的 类型解析
+	 *  本类只支持 xml相关的解析
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return boolean
+	 */
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return SUPPORTED_CLASSES.contains(clazz);

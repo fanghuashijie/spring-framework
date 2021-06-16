@@ -24,6 +24,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Converts String to a Boolean.
+ *  把string 转为 boolean 类型
  *
  * @author Keith Donald
  * @author Juergen Hoeller

@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Converts from a Collection to another Collection.
+ * 集合转为其他集合
  *
  * <p>First, creates a new Collection of the requested targetType with a size equal to the
  * size of the source Collection. Then copies each element in the source collection to the

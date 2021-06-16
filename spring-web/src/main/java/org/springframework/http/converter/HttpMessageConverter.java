@@ -33,6 +33,10 @@ import org.springframework.lang.Nullable;
  * @author Rossen Stoyanchev
  * @since 3.0
  * @param <T> the converted object type
+ *
+ *           消息转换器，
+ *           	看是否支持将 次class类型的对象，转换为MediaType 类型的数据
+ *           例如： 是否支持 Person 转 JSON， 或者 JSON 转为 Person对象
  */
 public interface HttpMessageConverter<T> {
 

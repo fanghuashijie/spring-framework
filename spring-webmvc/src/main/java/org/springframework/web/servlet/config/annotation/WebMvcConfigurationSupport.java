@@ -185,6 +185,9 @@ import org.springframework.web.util.pattern.PathPatternParser;
  * @since 3.1
  * @see EnableWebMvc
  * @see WebMvcConfigurer
+ *
+ *
+ * converters 的消息转换类配置，默认加载的消息转换类
  */
 public class WebMvcConfigurationSupport implements ApplicationContextAware, ServletContextAware {
 
@@ -213,6 +216,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 
 	private static final boolean kotlinSerializationJsonPresent;
 
+	// 静态类的方式创建单利，
 	static {
 		ClassLoader classLoader = WebMvcConfigurationSupport.class.getClassLoader();
 		romePresent = ClassUtils.isPresent("com.rometools.rome.feed.WireFeed", classLoader);

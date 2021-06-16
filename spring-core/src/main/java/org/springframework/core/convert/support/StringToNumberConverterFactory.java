@@ -38,6 +38,9 @@ import org.springframework.util.NumberUtils;
  * @see java.lang.Double
  * @see java.math.BigDecimal
  * @see NumberUtils
+ *
+ * string 转 number 的转换器
+ *
  */
 final class StringToNumberConverterFactory implements ConverterFactory<String, Number> {
 
@@ -46,7 +49,12 @@ final class StringToNumberConverterFactory implements ConverterFactory<String, N
 		return new StringToNumber<>(targetType);
 	}
 
-
+/**
+ *功能描述 string 转 number 的转换器
+ * @author bluce.liu
+ * @date 2021/6/4
+ * @return 
+ */
 	private static final class StringToNumber<T extends Number> implements Converter<String, T> {
 
 		private final Class<T> targetType;

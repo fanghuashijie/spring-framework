@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 
 /**
  * Converts a Collection to an array.
+ * 集合转为数组
  *
  * <p>First, creates a new array of the requested targetType with a length equal to the
  * size of the source Collection. Then sets each collection element into the array.

@@ -26,6 +26,10 @@ import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.lang.Nullable;
 
 /**
+ *功能描述 集合转为对象类型
+ * @author bluce.liu
+ * @date 2021/6/4
+ *
  * Converts a Collection to an Object by returning the first collection element after converting it to the desired targetType.
  *
  * @author Keith Donald

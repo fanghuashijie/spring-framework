@@ -37,6 +37,8 @@ import org.springframework.web.bind.WebDataBinder;
  * @see #setValidator(Validator)
  * @see #setConversionService(ConversionService)
  * @see #setPropertyEditorRegistrar
+ *
+ * web 的绑定器，绑定 banding（参数绑定器） ，convert（参数转换器），
  */
 public class ConfigurableWebBindingInitializer implements WebBindingInitializer {
 

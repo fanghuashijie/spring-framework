@@ -298,7 +298,13 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 		this.multipartCharset = charset;
 	}
 
-
+	/**
+	 *功能描述 判断是否支持返回参数的解析，
+	 * 本对象 多部件（文件） 类型的返回参数
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return boolean
+	 */
 	@Override
 	public boolean canRead(Class<?> clazz, @Nullable MediaType mediaType) {
 		if (!MultiValueMap.class.isAssignableFrom(clazz)) {

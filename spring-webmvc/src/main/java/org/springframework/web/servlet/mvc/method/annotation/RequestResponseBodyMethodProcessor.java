@@ -55,6 +55,10 @@ import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolv
  * {@link MethodArgumentNotValidException} is raised and results in an HTTP 400
  * response status code if {@link DefaultHandlerExceptionResolver} is configured.
  *
+  *功能描述  处理标注 RequestParam 和 ResponseBody 注解的类
+  * @author bluce.liu
+  * @date 2021/6/4
+ *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -106,11 +110,21 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	}
 
 
+	/**
+	 *功能描述 判断是否支持 请求参数的方法  @RequestBody 此注解的参数
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return parameter.hasParameterAnnotation(RequestBody.class);
 	}
 
+	/**
+	 *功能描述  判断是否支持 处理返回值的方法  支持 @ResponseBody 注解的方法
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 */
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
 		return (AnnotatedElementUtils.hasAnnotation(returnType.getContainingClass(), ResponseBody.class) ||
@@ -122,6 +136,8 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	 * @throws HttpMessageNotReadableException if {@link RequestBody#required()}
 	 * is {@code true} and there is no body content or if there is no suitable
 	 * converter to read the content with.
+	 *
+	 * 处理请求参数
 	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
@@ -168,6 +184,11 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 		return (requestBody != null && requestBody.required() && !parameter.isOptional());
 	}
 
+	/**
+	 *功能描述  处理返回值参数
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 */
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest)
@@ -178,6 +199,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 		ServletServerHttpResponse outputMessage = createOutputMessage(webRequest);
 
 		// Try even with null return value. ResponseBodyAdvice could get involved.
+		// 根据返回值的 convert 来处理返回值处理器
 		writeWithMessageConverters(returnValue, returnType, inputMessage, outputMessage);
 	}
 

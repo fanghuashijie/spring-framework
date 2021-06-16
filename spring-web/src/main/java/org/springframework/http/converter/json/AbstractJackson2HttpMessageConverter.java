@@ -232,6 +232,7 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 	}
 
 
+
 	@Override
 	public boolean canRead(Class<?> clazz, @Nullable MediaType mediaType) {
 		return canRead(clazz, null, mediaType);
@@ -255,6 +256,13 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 		return false;
 	}
 
+	/**
+	 *功能描述 判断是否支持返回值的 类型解析
+	 *  本类只支持 json 相关的解析
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return boolean
+	 */
 	@Override
 	public boolean canWrite(Class<?> clazz, @Nullable MediaType mediaType) {
 		if (!canWrite(mediaType)) {
@@ -271,6 +279,7 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 			return false;
 		}
 		AtomicReference<Throwable> causeRef = new AtomicReference<>();
+		// 如果是类对象，并支持序列化
 		if (objectMapper.canSerialize(clazz, causeRef)) {
 			return true;
 		}
@@ -407,6 +416,11 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 		}
 	}
 
+	/**
+	 *功能描述  把返回值的对象写到浏览器
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 */
 	@Override
 	protected void writeInternal(Object object, @Nullable Type type, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
@@ -421,6 +435,7 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 
 		OutputStream outputStream = StreamUtils.nonClosing(outputMessage.getBody());
 		try (JsonGenerator generator = objectMapper.getFactory().createGenerator(outputStream, encoding)) {
+			// 获取生成器
 			writePrefix(generator, object);
 
 			Object value = object;
@@ -451,6 +466,7 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 					config.isEnabled(SerializationFeature.INDENT_OUTPUT)) {
 				objectWriter = objectWriter.with(this.ssePrettyPrinter);
 			}
+			// 转换成 JSON 数据
 			objectWriter.writeValue(generator, value);
 
 			writeSuffix(generator, object);

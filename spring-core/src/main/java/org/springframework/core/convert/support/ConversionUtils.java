@@ -38,6 +38,7 @@ abstract class ConversionUtils {
 			TypeDescriptor sourceType, TypeDescriptor targetType) {
 
 		try {
+			// 进行参数转换， 可以在 WebDataBinder中放入自己的Converter
 			return converter.convert(source, sourceType, targetType);
 		}
 		catch (ConversionFailedException ex) {

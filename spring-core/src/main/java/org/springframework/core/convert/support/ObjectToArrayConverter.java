@@ -30,6 +30,10 @@ import org.springframework.util.Assert;
  * Converts an Object to a single-element array containing the Object.
  * Will convert the Object to the target array's component type if necessary.
  *
+  *功能描述  对象转为数组类型
+  * @author bluce.liu
+  * @date 2021/6/4
+ *
  * @author Keith Donald
  * @author Juergen Hoeller
  * @since 3.0

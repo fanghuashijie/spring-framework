@@ -69,6 +69,13 @@ public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<R
 	}
 
 
+	/**
+	 *功能描述 判断是否支持返回值的 类型解析
+	 *  本类只支持 标注 Resource 的对象
+	 * @author bluce.liu
+	 * @date 2021/6/4
+	 * @return boolean
+	 */
 	@Override
 	protected boolean supports(Class<?> clazz) {
 		return Resource.class.isAssignableFrom(clazz);

@@ -84,6 +84,7 @@ final class ObjectToObjectConverter implements ConditionalGenericConverter {
 	@Override
 	@Nullable
 	public Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+		// 对象转为其他对象
 		if (source == null) {
 			return null;
 		}

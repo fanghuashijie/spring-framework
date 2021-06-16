@@ -73,18 +73,22 @@ public abstract class AbstractGenericHttpMessageConverter<T> extends AbstractHtt
 
 	@Override
 	public boolean canWrite(@Nullable Type type, Class<?> clazz, @Nullable MediaType mediaType) {
+		// 判断是否可以写 到浏览器
 		return canWrite(clazz, mediaType);
 	}
 
 	/**
 	 * This implementation sets the default headers by calling {@link #addDefaultHeaders},
 	 * and then calls {@link #writeInternal}.
+	 *
+	 *  使用遍历的 消息转换器，写返回值到浏览器
 	 */
 	@Override
 	public final void write(final T t, @Nullable final Type type, @Nullable MediaType contentType,
 			HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-
+		// 创建一个返回的 请求头
 		final HttpHeaders headers = outputMessage.getHeaders();
+		// 设置默认的 ContentType Content-type属性 并赋值 contentType （application/json）
 		addDefaultHeaders(headers, t, contentType);
 
 		if (outputMessage instanceof StreamingHttpOutputMessage) {
@@ -101,7 +105,9 @@ public abstract class AbstractGenericHttpMessageConverter<T> extends AbstractHtt
 			}));
 		}
 		else {
+			//  把 返回参数写入responseBody
 			writeInternal(t, type, outputMessage);
+			// 刷到浏览器
 			outputMessage.getBody().flush();
 		}
 	}

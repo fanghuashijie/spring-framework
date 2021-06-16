@@ -79,6 +79,7 @@ import org.springframework.web.multipart.support.StandardServletPartUtils;
  * @author Sebastien Deleuze
  * @author Vladislav Kisel
  * @since 3.1
+ * 解析自定义参数 类型， 比如实体类
  */
 public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResolver, HandlerMethodReturnValueHandler {
 
@@ -117,6 +118,7 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 	 * @throws BindException if data binding and validation result in an error
 	 * and the next method parameter is not of type {@link Errors}
 	 * @throws Exception if WebDataBinder initialization fails
+	 * 解析自定义类型参数
 	 */
 	@Override
 	@Nullable
@@ -135,12 +137,14 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 		Object attribute = null;
 		BindingResult bindingResult = null;
 
+		// 查看是否包含注解
 		if (mavContainer.containsAttribute(name)) {
 			attribute = mavContainer.getModel().get(name);
 		}
 		else {
 			// Create attribute instance
 			try {
+				// 创建空的参数对象，例如 person
 				attribute = createAttribute(name, parameter, binderFactory, webRequest);
 			}
 			catch (BindException ex) {
@@ -162,9 +166,11 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 		if (bindingResult == null) {
 			// Bean property binding and validation;
 			// skipped in case of binding failure on construction.
+			// 创建数据转换器，转换参数，例如，string转int ，string转日期date等
 			WebDataBinder binder = binderFactory.createBinder(webRequest, attribute, name);
 			if (binder.getTarget() != null) {
 				if (!mavContainer.isBindingDisabled(name)) {
+					// 数据绑定器， 把参数的值绑定到 对象的属性中
 					bindRequestParameters(binder, webRequest);
 				}
 				validateIfApplicable(binder, parameter);

@@ -25,6 +25,10 @@ import org.springframework.core.convert.converter.Converter;
 /**
  * Simple converter from Java 8's {@link java.time.ZonedDateTime} to {@link java.util.Calendar}.
  *
+  *功能描述 时区类型转日历
+  * @author bluce.liu
+  * @date 2021/6/4
+ *
  * <p>Note that Spring's default ConversionService setup understands the 'from'/'to' convention
  * that the JSR-310 {@code java.time} package consistently uses. That convention is implemented
  * reflectively in {@link ObjectToObjectConverter}, not in specific JSR-310 converters.

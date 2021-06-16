@@ -24,6 +24,10 @@ import org.springframework.util.StringUtils;
 /**
  * Convert a String to a {@link TimeZone}.
  *
+  *功能描述  string 转时间的转换器
+  * @author bluce.liu
+  * @date 2021/6/4
+ *
  * @author Stephane Nicoll
  * @since 4.2
  */

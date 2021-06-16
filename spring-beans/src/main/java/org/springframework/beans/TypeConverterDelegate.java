@@ -109,6 +109,9 @@ class TypeConverterDelegate {
 	 * @param typeDescriptor the descriptor for the target property or field
 	 * @return the new value, possibly the result of type conversion
 	 * @throws IllegalArgumentException if type conversion failed
+	 *
+	 * 进行数据类型的转换
+	 *
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -116,16 +119,20 @@ class TypeConverterDelegate {
 			@Nullable Class<T> requiredType, @Nullable TypeDescriptor typeDescriptor) throws IllegalArgumentException {
 
 		// Custom editor for this type?
+		// 判断是否是自定义类型
 		PropertyEditor editor = this.propertyEditorRegistry.findCustomEditor(requiredType, propertyName);
 
 		ConversionFailedException conversionAttemptEx = null;
 
 		// No custom editor but custom ConversionService specified?
+		// 获取转换器类型  158中
 		ConversionService conversionService = this.propertyEditorRegistry.getConversionService();
 		if (editor == null && conversionService != null && newValue != null && typeDescriptor != null) {
 			TypeDescriptor sourceTypeDesc = TypeDescriptor.forObject(newValue);
+			// 判断是否 可以转换
 			if (conversionService.canConvert(sourceTypeDesc, typeDescriptor)) {
 				try {
+					// 进行参数转换
 					return (T) conversionService.convert(newValue, sourceTypeDesc, typeDescriptor);
 				}
 				catch (ConversionFailedException ex) {

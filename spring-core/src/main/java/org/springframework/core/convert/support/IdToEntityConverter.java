@@ -33,6 +33,8 @@ import org.springframework.util.ReflectionUtils;
  * Converts an entity identifier to a entity reference by calling a static finder method
  * on the target entity type.
  *
+ *   id 转为实体类型
+ *
  * <p>For this converter to match, the finder method must be static, have the signature
  * {@code find[EntityName]([IdType])}, and return an instance of the desired entity type.
  *
