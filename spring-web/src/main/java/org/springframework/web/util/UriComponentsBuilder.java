@@ -147,6 +147,9 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 	 * @see #newInstance()
 	 * @see #fromPath(String)
 	 * @see #fromUri(URI)
+	 *
+	 * 默认构造方法，其中path的构造类为CompositePathComponentBuilder，
+	 * 				它为UriComponentsBuilder的内部静态类，主要实现对url的path部分进行构造。
 	 */
 	protected UriComponentsBuilder() {
 		this.pathBuilder = new CompositePathComponentBuilder();
@@ -156,6 +159,8 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 	 * Create a deep copy of the given UriComponentsBuilder.
 	 * @param other the other builder to copy from
 	 * @since 4.1.3
+	 *
+	 * 创建一个传入UriComponentsBuilder类的深拷贝对象
 	 */
 	protected UriComponentsBuilder(UriComponentsBuilder other) {
 		this.scheme = other.scheme;
@@ -223,12 +228,17 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 	 * </pre>
 	 * @param uri the URI string to initialize with
 	 * @return the new {@code UriComponentsBuilder}
+	 *
+	 *
+	 * 静态方法，从uri的字符串中获得uri的各种要素
 	 */
 	public static UriComponentsBuilder fromUriString(String uri) {
 		Assert.notNull(uri, "URI must not be null");
+		// 利用正则表达式，获得uri的各个组成部分
 		Matcher matcher = URI_PATTERN.matcher(uri);
 		if (matcher.matches()) {
 			UriComponentsBuilder builder = new UriComponentsBuilder();
+			// 获得对应要素的字符串
 			String scheme = matcher.group(2);
 			String userInfo = matcher.group(5);
 			String host = matcher.group(6);
@@ -236,7 +246,10 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 			String path = matcher.group(9);
 			String query = matcher.group(11);
 			String fragment = matcher.group(13);
+			// uri是否透明的标志位
 			boolean opaque = false;
+			// uri存在scheme且后面不跟:/则为不透明uri
+			// 例如mailto:java-net@java.sun.com
 			if (StringUtils.hasLength(scheme)) {
 				String rest = uri.substring(scheme.length());
 				if (!rest.startsWith(":/")) {
@@ -244,6 +257,7 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 				}
 			}
 			builder.scheme(scheme);
+			// 如果为不透明uri，则具备ssp，需要设置ssp
 			if (opaque) {
 				String ssp = uri.substring(scheme.length() + 1);
 				if (StringUtils.hasLength(fragment)) {
@@ -251,6 +265,7 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 				}
 				builder.schemeSpecificPart(ssp);
 			}
+			// 如果为绝对uri（通常意义上的uri），则设置各个component
 			else {
 				if (StringUtils.hasLength(scheme) && scheme.startsWith("http") && !StringUtils.hasLength(host)) {
 					throw new IllegalArgumentException("[" + uri + "] is not a valid HTTP URL");
@@ -268,6 +283,7 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 			}
 			return builder;
 		}
+		// 传入uri格式不对，抛出异常
 		else {
 			throw new IllegalArgumentException("[" + uri + "] is not a valid URI");
 		}
@@ -454,6 +470,8 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 	/**
 	 * Build a {@code UriComponents} instance from the various components contained in this builder.
 	 * @return the URI components
+	 *
+	 * 默认的build方法
 	 */
 	public UriComponents build() {
 		return build(false);
@@ -467,6 +485,11 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 	 * @return the URI components
 	 * @throws IllegalArgumentException if any of the components contain illegal
 	 * characters that should have been encoded.
+	 *
+	 *
+	 * 具体的build实现方法，它通过ssp是否为空，判断构造的uri属于相对uri还是绝对uri，
+	 * 生成OpaqueUriComponents类（相对）或HierarchicalUriComponents类（绝对），
+	 * 它们都为UriComponents的子类
 	 */
 	public UriComponents build(boolean encoded) {
 		return buildInternal(encoded ? EncodingHint.FULLY_ENCODED :
@@ -479,6 +502,7 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 			result = new OpaqueUriComponents(this.scheme, this.ssp, this.fragment);
 		}
 		else {
+			// 调用pathBuilder的build方法，构造对应的path
 			HierarchicalUriComponents uric = new HierarchicalUriComponents(this.scheme, this.fragment,
 					this.userInfo, this.host, this.port, this.pathBuilder.build(), this.queryParams,
 					hint == EncodingHint.FULLY_ENCODED);
@@ -950,6 +974,8 @@ public class UriComponentsBuilder implements UriBuilder, Cloneable {
 		PathComponentBuilder cloneBuilder();
 	}
 
+// 由于url的path部分是比较复杂的，这边springMVC用了内部类的方式，为path单独加了两个builder类，
+// 分别是CompositePathComponentBuilder、FullPathComponentBuilder，
 
 	private static class CompositePathComponentBuilder implements PathComponentBuilder {
 

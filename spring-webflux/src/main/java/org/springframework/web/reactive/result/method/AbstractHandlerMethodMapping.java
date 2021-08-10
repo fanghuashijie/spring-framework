@@ -313,6 +313,12 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 * @return the best-matching handler method, or {@code null} if no match
 	 * @see #handleMatch
 	 * @see #handleNoMatch
+	 *
+	 * 查找当前请求的最佳匹配处理程序方法。如果找到多个匹配项，则选择最佳匹配项
+	 *
+	 *  根据URL查找哪个处理器来处理
+	 *
+	 *
 	 */
 	@Nullable
 	protected HandlerMethod lookupHandlerMethod(ServerWebExchange exchange) throws Exception {

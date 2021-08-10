@@ -43,11 +43,20 @@ import org.springframework.util.MultiValueMap;
  * @author Rossen Stoyanchev
  * @since 3.1
  * @see UriComponentsBuilder
+ *
+ * spring 中用到的构造者模式    抽象建造者
+ *
+ * 建造者（Builder）模式的主要角色如下。
+ *       产品角色（Product）：它是包含多个组成部件的复杂对象，由具体建造者来创建其各个零部件。
+ *       抽象建造者（Builder）：它是一个包含创建产品各个子部件的抽象方法的接口，通常还包含一个返回复杂产品的方法 getResult()。
+ *       具体建造者(Concrete Builder）：实现 Builder 接口，完成复杂产品的各个部件的具体创建方法。
+ *       指挥者（Director）：它调用建造者对象中的部件构造与装配方法完成复杂对象的创建，在指挥者中不涉及具体产品的信息。
+ *
  */
 @SuppressWarnings("serial")
 public abstract class UriComponents implements Serializable {
 
-	/** Captures URI template variable names. */
+	/** Captures URI template variable names. 用于分割uri的正则表达式，下面会说到 */
 	private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)}");
 
 
@@ -65,9 +74,11 @@ public abstract class UriComponents implements Serializable {
 
 
 	// Component getters
+	// 多个Components对应的getter方法
 
 	/**
 	 * Return the scheme. Can be {@code null}.
+	 * 返回URL的scheme
 	 */
 	@Nullable
 	public final String getScheme() {
@@ -76,6 +87,7 @@ public abstract class UriComponents implements Serializable {
 
 	/**
 	 * Return the fragment. Can be {@code null}.
+	 * 返回URL的fragment
 	 */
 	@Nullable
 	public final String getFragment() {
@@ -84,46 +96,56 @@ public abstract class UriComponents implements Serializable {
 
 	/**
 	 * Return the scheme specific part. Can be {@code null}.
+	 * 返回方案特定部分
+	 * 返回URL的schemeSpecificPar
 	 */
 	@Nullable
 	public abstract String getSchemeSpecificPart();
 
 	/**
 	 * Return the user info. Can be {@code null}.
+	 * 返回userInfo
 	 */
 	@Nullable
 	public abstract String getUserInfo();
 
 	/**
 	 * Return the host. Can be {@code null}.
+	 * 返回URL的host
 	 */
 	@Nullable
 	public abstract String getHost();
 
 	/**
 	 * Return the port. {@code -1} if no port has been set.
+	 * 返回URL的port
 	 */
 	public abstract int getPort();
 
 	/**
 	 * Return the path. Can be {@code null}.
+	 * 返回URL的path
 	 */
 	@Nullable
 	public abstract String getPath();
 
 	/**
 	 * Return the list of path segments. Empty if no path has been set.
+	 * 返回URL的path部分的集合
 	 */
 	public abstract List<String> getPathSegments();
 
 	/**
 	 * Return the query. Can be {@code null}.
+	 * 返回URL的query部分
+	 *
 	 */
 	@Nullable
 	public abstract String getQuery();
 
 	/**
 	 * Return the map of query parameters. Empty if no query has been set.
+	 *	返回URL的query参数map
 	 */
 	public abstract MultiValueMap<String, String> getQueryParams();
 
@@ -137,6 +159,8 @@ public abstract class UriComponents implements Serializable {
 	 * For most cases, {@link UriComponentsBuilder#encode()} is more likely
 	 * to give the expected result.
 	 * @see UriComponentsBuilder#encode()
+	 *
+	 * 将URL的components用特定的编码规则编码并返回，默认为utf-8
 	 */
 	public final UriComponents encode() {
 		return encode(StandardCharsets.UTF_8);
@@ -146,6 +170,8 @@ public abstract class UriComponents implements Serializable {
 	 * A variant of {@link #encode()} with a charset other than "UTF-8".
 	 * @param charset the charset to use for encoding
 	 * @see UriComponentsBuilder#encode(Charset)
+	 *
+	 * 编码的抽象方法，传入相应的编码规则
 	 */
 	public abstract UriComponents encode(Charset charset);
 
@@ -155,6 +181,8 @@ public abstract class UriComponents implements Serializable {
 	 * represent variable values. The order of variables is not significant.
 	 * @param uriVariables the map of URI variables
 	 * @return the expanded URI components
+	 *
+	 * 将URL中的模板参数换成对应的值
 	 */
 	public final UriComponents expand(Map<String, ?> uriVariables) {
 		Assert.notNull(uriVariables, "'uriVariables' must not be null");
@@ -166,6 +194,8 @@ public abstract class UriComponents implements Serializable {
 	 * <p>The given array represents variable values. The order of variables is significant.
 	 * @param uriVariableValues the URI variable values
 	 * @return the expanded URI components
+	 *
+	 * 将URL中的模板参数换成对应的值，输入为数组
 	 */
 	public final UriComponents expand(Object... uriVariableValues) {
 		Assert.notNull(uriVariableValues, "'uriVariableValues' must not be null");
@@ -177,6 +207,7 @@ public abstract class UriComponents implements Serializable {
 	 * {@link UriTemplateVariables}.
 	 * @param uriVariables the URI template values
 	 * @return the expanded URI components
+	 * 将URL中的模板参数换成对应的值，输入为UriTemplateVariables
 	 */
 	public final UriComponents expand(UriTemplateVariables uriVariables) {
 		Assert.notNull(uriVariables, "'uriVariables' must not be null");
@@ -188,6 +219,8 @@ public abstract class UriComponents implements Serializable {
 	 * UriTemplateVariables}.
 	 * @param uriVariables the URI template values
 	 * @return the expanded URI components
+	 *
+	 * 将URL中的模板参数换成对应的值的最终的实现方法
 	 */
 	abstract UriComponents expandInternal(UriTemplateVariables uriVariables);
 
@@ -196,6 +229,8 @@ public abstract class UriComponents implements Serializable {
 	 * normalization is applied to the full path, and not to individual path
 	 * segments.
 	 * @see org.springframework.util.StringUtils#cleanPath(String)
+	 *
+	 * 处理URL
 	 */
 	public abstract UriComponents normalize();
 
@@ -206,6 +241,8 @@ public abstract class UriComponents implements Serializable {
 	 * characters, for example if URI variables have not been expanded or if
 	 * encoding has not been applied via {@link UriComponentsBuilder#encode()}
 	 * or {@link #encode()}.
+	 *
+	 * 返回URL的string
 	 */
 	public abstract String toUriString();
 
@@ -217,6 +254,8 @@ public abstract class UriComponents implements Serializable {
 	 * <p>If not yet encoded, pass individual URI component values to the
 	 * multi-argument {@link URI} constructor which quotes illegal characters
 	 * that cannot appear in their respective URI component.
+	 *
+	 * 返回URI格式的方法
 	 */
 	public abstract URI toUri();
 
@@ -231,6 +270,8 @@ public abstract class UriComponents implements Serializable {
 	/**
 	 * Set all components of the given UriComponentsBuilder.
 	 * @since 4.2
+	 *
+	 * 将这些Components的值赋给其builder类
 	 */
 	protected abstract void copyToUriComponentsBuilder(UriComponentsBuilder builder);
 
